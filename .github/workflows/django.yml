@@ -8,20 +8,43 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.12]
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user_db
+          POSTGRES_PASSWORD: pass_db
+          POSTGRES_DB: db_name
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U user_db -d db_name" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-        
+    
+    - name: Install Dockerize
+      run: |
+        curl -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz | tar -C /usr/local/bin -xzv
+
     - name: Set up environment variables copy from .env.example
       run: |
         cp .env.example .env
@@ -34,18 +57,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Wait for PostgreSQL to be ready
+      run: |
+        dockerize -wait tcp://localhost:5432 -timeout 1m
+
     - name: Wait for Redis to be ready
       run: |
-        dockerize -wait tcp://redis:6379 -timeout 1m
-
-    - name: Wait for Backend (Django) to be ready
-      run: |
-        dockerize -wait http://localhost:8000 -timeout 1m
-
-    - name: Wait for Celery Worker to be ready
-      run: |
-        dockerize -wait tcp://localhost:5555 -timeout 1m
+        dockerize -wait tcp://localhost:6379 -timeout 1m
 
     - name: Run Tests
       run: |
         python manage.py test
+      env:
+        DATABASE_NAME: db_name
+        DATABASE_USER: user_db
+        DATABASE_PASSWORD: pass_db
+        DATABASE_HOST: localhost
+        DATABASE_PORT: 5432
+        CELERY_BROKER_URL: redis://localhost:6379/0
