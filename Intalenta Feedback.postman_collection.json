@@ -1,0 +1,222 @@
+{
+	"info": {
+		"_postman_id": "98e106ef-f0b7-4260-95c6-603f38655f83",
+		"name": "Intalenta Feedback",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8238399"
+	},
+	"item": [
+		{
+			"name": "POST /api/v1/feedback/process/:",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\"customer_id\": 1, \"feedback_text\": \"Great product!\", \"timestamp\": \"2024-12-11T10:00:00Z\"},\n    {\"customer_id\": 2, \"feedback_text\": \"Needs improvement.\", \"timestamp\": \"2024-12-11T11:00:00Z\"}\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/feedback/process/",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"feedback",
+						"process",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\"customer_id\": 1, \"feedback_text\": \"Great product!\", \"timestamp\": \"2024-12-11T10:00:00Z\"},\n    {\"customer_id\": 2, \"feedback_text\": \"Needs improvement.\", \"timestamp\": \"2024-12-11T11:00:00Z\"}\n]\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/v1/feedback/process/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"feedback",
+								"process",
+								""
+							]
+						}
+					},
+					"status": "Accepted",
+					"code": 202,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 11 Dec 2024 05:28:07 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.12.8"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "92"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"task_ids\": [\n        \"74d27294-aeda-4cfa-a1b9-36dc59635b3e\",\n        \"8b4b0129-c82f-44c4-8d58-2883eeaac81d\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "GET /api/v1/feedback/results/:task_id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/v1/feedback/results/:task_id",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"feedback",
+						"results",
+						":task_id"
+					],
+					"variable": [
+						{
+							"key": "task_id",
+							"value": "1bec4bbf-d7a6-48d9-9033-7ffdd5f1e186"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/v1/feedback/results/:task_id",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"feedback",
+								"results",
+								":task_id"
+							],
+							"variable": [
+								{
+									"key": "task_id",
+									"value": "1bec4bbf-d7a6-48d9-9033-7ffdd5f1e186"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 11 Dec 2024 04:36:48 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.12.6"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "129"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"feedback_id\": 63,\n    \"feedback_text\": \"Great product!\",\n    \"sentiment\": \"neutral\",\n    \"keywords\": [\n        \"keyword1\",\n        \"keyword2\"\n    ],\n    \"status\": \"COMPLETED\"\n}"
+				}
+			]
+		}
+	]
+}
