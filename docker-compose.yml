@@ -1,0 +1,81 @@
+services:
+  backend:
+    build:
+      context: .
+    container_name: backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.backend.rule=Host(`localhost`)"
+    #   - "traefik.http.routers.backend.entrypoints=http"
+    #   - "traefik.http.services.backend.loadbalancer.server.port=8000"
+    #   - "traefik.http.routers.backend.middlewares=redirect-to-https"
+    #   - "traefik.http.routers.backend-secure.rule=Host(`localhost`)"
+    #   - "traefik.http.routers.backend-secure.entrypoints=https"
+    #   - "traefik.http.routers.backend-secure.tls=true"
+    #   - "traefik.http.routers.backend-secure.tls.certresolver=myresolver"
+
+  celery:
+    build:
+      context: .
+    container_name: celery
+    command: celery -A backend.celery:app worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
+
+  # traefik:
+  #   image: traefik:v2.5
+  #   container_name: traefik
+  #   command:
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--entrypoints.http.address=:80"
+  #     - "--entrypoints.https.address=:443"
+  #     - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+  #     - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http"
+  #     - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+  #     - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - "./letsencrypt:/letsencrypt"
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+  #     - backend
+
+volumes:
+  postgres_data:
